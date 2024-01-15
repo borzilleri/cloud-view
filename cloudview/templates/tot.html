@@ -1,0 +1,9 @@
+<section>
+  <h2>Tot</h2>
+  % for idx, info in enumerate(dots):
+  <div>
+    <h3>Dot {{idx+1}}</h3>
+    <textarea readonly cols="80" rows="{{info['lines']}}">{{info['text']}}</textarea>
+  </div>
+  % end
+</section>

@@ -1,0 +1,20 @@
+<html>
+
+<head>
+  <title>CloudView</title>
+  <style>
+    textarea {
+      resize: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>CloudView</h1>
+  % for section in sections:
+  <hr />
+  % include(section['tpl'], **(section['data']))
+  % end
+</body>
+
+</html>

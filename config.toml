@@ -1,0 +1,19 @@
+
+[firefox]
+enabled = false
+name = "Firefox"
+cache-timeout = 10
+ffsclient = "~/Projects/cloudview/bin/ffsclient"
+
+
+[safari]
+enabled = true
+name = "Safari"
+cache-timeout = 10
+cloudtabs = "~/Library/Containers/com.apple.Safari/Data/Library/Safari/CloudTabs.db"
+
+[tot]
+enabled = false
+shortcut-name = "TotToJson"
+cache-timeout = 20
+colors = ["F3C345", "ED7E2F", "DB3D56", "A441E8", "5483F5", "4EB5D4", "97D144"]

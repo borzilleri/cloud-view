@@ -1,0 +1,13 @@
+<section>
+  <h2>{{browser}}</h2>
+  % for device,tabs in devices.items():
+  <div>
+    <h3>{{device}}</h3>
+    <ul>
+      % for t in tabs:
+      <li><a href="{{t['url']}}">{{t['title']}}</a></li>
+      % end
+    </ul>
+  </div>
+  % end
+</section>
