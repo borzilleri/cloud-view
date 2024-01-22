@@ -12,11 +12,10 @@ __CACHE = {"data": None, "ts": 0}
 
 def __load_dots(shortcut_name: str) -> list[dict]:
     print("tot: querying dot info")
-    data = util.run_cmd(f"shortcuts run '{shortcut_name}'")
-    if not data:
+    dots = util.run_shortcut(shortcut_name)
+    if not dots:
         print("tot: no data found.")
         return []
-    dots = json.loads(data)
     for dot in dots:
         dot["lines"] = len(dot["text"].split("\n"))
     return dots

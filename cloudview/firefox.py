@@ -11,7 +11,9 @@ __CACHE = {"data": None, "ts": 0}
 
 def __load_ffsync_data(ffsclient_exe: str) -> dict[str, dict]:
     print("firefox: querying sync client.")
-    data = util.run_cmd(f"{ffsclient_exe} tabs list --format json")
+    data = util.run_cmd(
+        f"{ffsclient_exe} tabs list --force-refresh-session --format json --minimized-json"
+    )
     result = {}
     if data:
         tabs = json.loads(data)
@@ -42,6 +44,6 @@ def __get_ff_tabs(config: dict):
 
 
 def render(config: dict) -> Optional[dict]:
-    tabs = __get_ff_tabs(config)
-    if tabs:
-        return util.tpl_include("browser", {"browser": config["name"], "devices": tabs})
+    return util.tpl_include(
+        "browser", {"browser": config["name"], "devices": __get_ff_tabs(config)}
+    )

@@ -1,4 +1,4 @@
-from . import firefox, safari, tot, util
+from . import modules, util
 import argparse
 import tomllib
 from pathlib import Path
@@ -9,20 +9,10 @@ __CONFIG = {}
 
 @route("/")
 def index():
-    sections = []
-    if __CONFIG["firefox"]["enabled"]:
-        data = firefox.render(__CONFIG["firefox"])
-        if data:
-            sections.append(data)
-    if __CONFIG["safari"]["enabled"]:
-        data = safari.render(__CONFIG["safari"])
-        if data:
-            sections.append(data)
-    if __CONFIG["tot"]["enabled"]:
-        data = tot.render(__CONFIG["tot"])
-        if data:
-            sections.append(data)
-    return template(util.template("index"), sections=sections)
+    return template(
+        util.template("index"),
+        sections=modules.render_sections(__CONFIG),
+    )
 
 
 def __load_config(path: str):

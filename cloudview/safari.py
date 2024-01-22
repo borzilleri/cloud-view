@@ -20,11 +20,11 @@ def __load_safari_data(db_file: str):
     temp_db = f"{tempfile.gettempdir()}/{str(uuid.uuid4())}"
     result = {}
     try:
-        # We copy the database into a temp file, to avoid some 
+        # We copy the database into a temp file, to avoid some
         # access/permissions and also ensure we're not interfering with
         # normal safari/icloud operations.
         util.run_cmd(f"cp '{db_path}' '{temp_db}'")
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(temp_db)
         cursor = conn.cursor()
         for row in cursor.execute(__QUERY):
             (title, url, device) = row
@@ -56,6 +56,6 @@ def __get_safari_tabs(config: dict):
 
 
 def render(config: dict) -> Optional[dict]:
-    tabs = __get_safari_tabs(config)
-    if tabs:
-        return util.tpl_include("browser", {"browser": config["name"], "devices": tabs})
+    return util.tpl_include(
+        "browser", {"browser": config["name"], "devices": __get_safari_tabs(config)}
+    )

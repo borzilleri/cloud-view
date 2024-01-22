@@ -1,0 +1,14 @@
+<section class="weather">
+  % if not rooms:
+  <div>No weather data found.</div>
+  % else:
+  % for room in rooms:
+  <div>
+    <div>{{room['name']}}</div>
+    % for metric in room['metrics']:
+    <div>{{metric['name']}}: {{metric['value']}}</div>
+    % end
+  </div>
+  % end
+  % end
+</section>

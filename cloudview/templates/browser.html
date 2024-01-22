@@ -1,5 +1,8 @@
 <section>
   <h2>{{browser}}</h2>
+  % if not devices:
+  <div>No data loaded.</div>
+  % else:
   % for device,tabs in devices.items():
   <div>
     <h3>{{device}}</h3>
@@ -9,5 +12,6 @@
       % end
     </ul>
   </div>
+  % end
   % end
 </section>

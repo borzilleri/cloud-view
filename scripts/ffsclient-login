@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Logs into firefox sync using 1Password CLI to reference secret data
+ffsclient login $(op read "op://Personal/Firefox Sync/username") $(op read "op://Personal/Firefox Sync/password")
