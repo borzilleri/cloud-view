@@ -1,12 +1,10 @@
-from . import util
+from . import cache, util
 import json
-import time
 from typing import Optional
 
 __C_FFSCLIENT = "ffsclient"
 __C_TIMEOUT = "cache-timeout"
 __DEFAULT_TIMEOUT = 10
-__CACHE = {"data": None, "ts": 0}
 
 
 def __load_ffsync_data(ffsclient_exe: str) -> dict[str, dict]:
@@ -28,19 +26,13 @@ def __load_ffsync_data(ffsclient_exe: str) -> dict[str, dict]:
 
 
 def __get_ff_tabs(config: dict):
+    if __C_FFSCLIENT not in config:
+        util.warn("firefox: ffsclient path not configured.")
+        return None
     timeout = config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
-    now = int(time.time())
-    if not __CACHE["data"] or now > (__CACHE["ts"] + timeout):
-        if __C_FFSCLIENT in config:
-            data = __load_ffsync_data(config[__C_FFSCLIENT])
-            if data:
-                __CACHE["data"] = data
-                __CACHE["ts"] = now
-        else:
-            util.warn("firefox: ffsclient path not configured.")
-    else:
-        print("firefox: loading cached data.")
-    return __CACHE["data"]
+    return cache.get(
+        "firefox", timeout, lambda: __load_ffsync_data(config[__C_FFSCLIENT])
+    )
 
 
 def render(config: dict) -> Optional[dict]:

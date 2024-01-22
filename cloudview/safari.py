@@ -1,7 +1,6 @@
-from . import util
+from . import cache, util
 import sqlite3
 import tempfile
-import time
 import uuid
 from pathlib import Path
 from typing import Optional
@@ -9,7 +8,6 @@ from typing import Optional
 __C_CLOUDTABS = "cloudtabs"
 __C_TIMEOUT = "cache-timeout"
 __DEFAULT_TIMEOUT = 10
-__CACHE = {"data": None, "ts": 0}
 
 __QUERY = "SELECT t.title, t.url, d.device_name from cloud_tabs t JOIN cloud_tab_devices d on t.device_uuid == d.device_uuid;"
 
@@ -40,19 +38,13 @@ def __load_safari_data(db_file: str):
 
 
 def __get_safari_tabs(config: dict):
+    if __C_CLOUDTABS not in config:
+        util.warn("safari: CloudTabs.db path not configured.")
+        return None
     timeout = config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
-    now = int(time.time())
-    if not __CACHE["data"] or now > (__CACHE["ts"] + timeout):
-        if __C_CLOUDTABS in config:
-            data = __load_safari_data(config[__C_CLOUDTABS])
-            if data:
-                __CACHE["data"] = data
-                __CACHE["ts"] = now
-        else:
-            util.warn("safari: CloudTabs.db path not configured.")
-    else:
-        print("safari: loading cached data.")
-    return __CACHE["data"]
+    return cache.get(
+        "safari", timeout, lambda: __load_safari_data(config[__C_CLOUDTABS])
+    )
 
 
 def render(config: dict) -> Optional[dict]:

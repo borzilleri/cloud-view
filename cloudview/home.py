@@ -95,7 +95,6 @@ def __get_weather(config: dict):
                     room_data["metrics"].append(metric_data)
             if room_data["metrics"]:
                 result.append(room_data)
-        print(result)
         return result
     else:
         util.warn("home: weather shortcut name not configured.")

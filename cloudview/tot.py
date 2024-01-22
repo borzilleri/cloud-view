@@ -1,13 +1,9 @@
-from . import util
-import json
-import time
+from . import cache, util
 from typing import Optional
 
 __C_SHORTCUT = "shortcut-name"
 __C_TIMEOUT = "cache-timeout"
 __DEFAULT_TIMEOUT = 20
-
-__CACHE = {"data": None, "ts": 0}
 
 
 def __load_dots(shortcut_name: str) -> list[dict]:
@@ -22,19 +18,11 @@ def __load_dots(shortcut_name: str) -> list[dict]:
 
 
 def __get_dots(config: dict):
+    if __C_SHORTCUT not in config:
+        util.warn("tot: shortcut name not configured.")
+        return None
     timeout = config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
-    now = int(time.time())
-    if not __CACHE["data"] or now > (__CACHE["ts"] + timeout):
-        if __C_SHORTCUT in config:
-            data = __load_dots(config[__C_SHORTCUT])
-            if data:
-                __CACHE["data"] = data
-                __CACHE["ts"] = now
-        else:
-            util.warn("tot: shortcut name not configured.")
-    else:
-        print("tot: loading cached data")
-    return __CACHE["data"]
+    return cache.get("tot", timeout, lambda: __load_dots(config[__C_SHORTCUT]))
 
 
 def render(config: dict) -> Optional[dict]:
