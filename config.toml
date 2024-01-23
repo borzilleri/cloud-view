@@ -1,24 +1,24 @@
-[section.weather]
+[section.home]
 enabled = true
 shortcut = "HomeWeatherAsJson"
-cache-timeout = 30
+cache-timeout = 300
 rooms = { bedroom = "Bedroom", den = "Den", livingroom = "LivingRoom" }
 temperature = "F"
 
 [section.firefox]
 enabled = true
 name = "Firefox"
-cache-timeout = 10
+cache-timeout = 20
 ffsclient = "ffsclient"
 
 [section.safari]
 enabled = true
 name = "Safari"
-cache-timeout = 10
+cache-timeout = 20
 cloudtabs = "~/Library/Containers/com.apple.Safari/Data/Library/Safari/CloudTabs.db"
 
 [section.tot]
 enabled = true
 shortcut-name = "TotToJson"
-cache-timeout = 20
+cache-timeout = 60
 colors = ["F3C345", "ED7E2F", "DB3D56", "A441E8", "5483F5", "4EB5D4", "97D144"]

@@ -1,4 +1,5 @@
 from . import cache, util
+from .datasource import DataSource
 import sqlite3
 import tempfile
 import uuid
@@ -7,12 +8,12 @@ from typing import Optional
 
 __C_CLOUDTABS = "cloudtabs"
 __C_TIMEOUT = "cache-timeout"
-__DEFAULT_TIMEOUT = 10
+__DEFAULT_TIMEOUT = 20
 
 __QUERY = "SELECT t.title, t.url, d.device_name from cloud_tabs t JOIN cloud_tab_devices d on t.device_uuid == d.device_uuid;"
 
 
-def __load_safari_data(db_file: str):
+def __load_data(db_file: str):
     print("safari: querying CloudTabs.db")
     db_path = str(Path(db_file).expanduser().absolute())
     temp_db = f"{tempfile.gettempdir()}/{str(uuid.uuid4())}"
@@ -37,17 +38,27 @@ def __load_safari_data(db_file: str):
     return result
 
 
-def __get_safari_tabs(config: dict):
+def __get_safari_tabs(config: dict, force: bool = False):
     if __C_CLOUDTABS not in config:
         util.warn("safari: CloudTabs.db path not configured.")
         return None
     timeout = config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
     return cache.get(
-        "safari", timeout, lambda: __load_safari_data(config[__C_CLOUDTABS])
+        "safari", timeout, lambda: __load_data(config[__C_CLOUDTABS]), force
     )
 
 
-def render(config: dict) -> Optional[dict]:
+def __render(config: dict) -> Optional[dict]:
     return util.tpl_include(
         "browser", {"browser": config["name"], "devices": __get_safari_tabs(config)}
+    )
+
+
+def __update(config: dict):
+    __get_safari_tabs(config, True)
+
+
+def init(config: dict):
+    return DataSource(
+        config, __render, __update, config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
     )

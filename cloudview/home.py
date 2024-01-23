@@ -1,9 +1,10 @@
 from . import cache, util
+from .datasource import DataSource
 from typing import Optional
 
 __C_SHORTCUT = "shortcut"
 __C_TIMEOUT = "cache-timeout"
-__DEFAULT_TIMEOUT = 20
+__DEFAULT_TIMEOUT = 300
 __DEFAULT_TEMP = "F"
 
 
@@ -69,7 +70,7 @@ def __parse_metric(metric, val, config) -> Optional[dict]:
         return {"name": "Humidity", "value": __parse_humidity(val)}
 
 
-def __load_weather_data(shortcut_name):
+def __load_data(shortcut_name):
     print("home: querying weather data")
     data = util.run_shortcut(shortcut_name)
     if not data:
@@ -78,30 +79,43 @@ def __load_weather_data(shortcut_name):
     return data
 
 
-def __get_weather(config: dict):
+def __parse_data(config: dict, data: dict):
+    result = []
+    for room, name in config.get("rooms", {}).items():
+        room_data = {"name": name, "metrics": []}
+        for metric, val in data.get(room, {}).items():
+            metric_data = __parse_metric(metric, val, config)
+            if metric_data:
+                room_data["metrics"].append(metric_data)
+        if room_data["metrics"]:
+            result.append(room_data)
+    return result
+
+
+def __get_weather(config: dict, force: bool = False):
     timeout = config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
-    if __C_SHORTCUT in config:
-        data = cache.get(
-            "weather", timeout, lambda: __load_weather_data(config[__C_SHORTCUT])
-        )
-        if not data:
-            return None
-        result = []
-        for room, name in config.get("rooms", {}).items():
-            room_data = {"name": name, "metrics": []}
-            for metric, val in data.get(room, {}).items():
-                metric_data = __parse_metric(metric, val, config)
-                if metric_data:
-                    room_data["metrics"].append(metric_data)
-            if room_data["metrics"]:
-                result.append(room_data)
-        return result
-    else:
+    if __C_SHORTCUT not in config:
         util.warn("home: weather shortcut name not configured.")
         return None
+    return cache.get(
+        "weather", timeout, lambda: __load_data(config[__C_SHORTCUT]), force
+    )
 
 
-def render(config: dict) -> Optional[dict]:
-    rooms = __get_weather(config)
+def __update(config: dict):
+    __get_weather(config, True)
+
+
+def __render(config: dict) -> Optional[dict]:
+    data = __get_weather(config)
+    if not data:
+        return None
+    rooms = __parse_data(config, data)
     if rooms:
-        return {"tpl": util.template("weather"), "data": {"rooms": rooms}}
+        return {"tpl": util.template("home"), "data": {"rooms": rooms}}
+
+
+def init(config: dict):
+    return DataSource(
+        config, __render, __update, config.get(__C_TIMEOUT, __DEFAULT_TIMEOUT)
+    )
