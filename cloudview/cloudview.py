@@ -32,7 +32,15 @@ def __load_config(path: str) -> dict:
     return {}
 
 
+def __run_server(conf: dict):
+    run(
+        host=conf.get("host", "localhost"),
+        port=conf.get("port", 8080),
+        debug=conf.get("debug", True),
+    )
+
+
 def start(args: argparse.Namespace):
     config = __load_config(args.config)
     modules.init(config)
-    run(host="localhost", port=args.port, debug=args.debug)
+    __run_server(config.get("server", {}))
