@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>Label</key>
-        <string>io.rampant.cloudview</string>
-
-        <key>WorkingDirectory</key>
-        <string>/opt/cloudview/</string>
-
-        <key>Program</key>
-        <string>env/bin/python main.py</string>
-
-        <key>StartCalendarInterval</key>
-        <dict>
-            <key>Hour</key>
-            <integer>1</integer>
-            <key>Minute</key>
-            <integer>0</integer>
-        </dict>
-    </dict>
+<dict>
+	<key>Label</key>
+	<string>io.rampant.cloudview</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/cloudview/env/bin/python</string>
+		<string>main.py</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StandardErrorPath</key>
+	<string>/tmp/io.rampant.cloudview.stderr</string>
+	<key>StandardOutPath</key>
+	<string>/tmp/io.rampant.cloudview.stdout</string>
+	<key>WorkingDirectory</key>
+	<string>/opt/cloudview</string>
+</dict>
 </plist>
