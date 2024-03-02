@@ -4,7 +4,9 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-__tpl = Path(__file__).parent / "templates"
+__root = Path(__file__).parent
+__tpl = __root / "templates"
+__assets = __root / "assets"
 
 
 def warn(s: str):
@@ -34,6 +36,9 @@ def run_cmd(cmd: str, debug: bool = False) -> Optional[str]:
 def template(name: str):
     tpl_path = __tpl / f"{name}.html"
     return str(tpl_path)
+
+def assets_dir() -> str:
+    return str(__assets)
 
 
 def tpl_include(name: str, data) -> dict:

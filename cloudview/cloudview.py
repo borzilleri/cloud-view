@@ -4,7 +4,7 @@ import signal
 import sys
 import tomllib
 from pathlib import Path
-from bottle import route, run, template
+from bottle import route, run, template, static_file
 
 
 def handle_signal(signal, frame):
@@ -22,6 +22,10 @@ def index():
         util.template("index"),
         sections=modules.render(),
     )
+
+@route("/assets/<filepath:path>")
+def img(filepath):
+    return static_file(filepath, root=util.assets_dir())
 
 
 def __load_config(path: str) -> dict:

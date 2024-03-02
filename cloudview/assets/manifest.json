@@ -1,0 +1,12 @@
+{
+  "name": "CloudView",
+  "short_name": "CloudView",
+  "description": "A view into your cloud tabs and data",
+  "theme_color": "#cecece",
+  "background_color": "#2196f3",
+  "display": "standalone",
+  "orientation": "portrait",
+  "Scope": "/cloudview/",
+  "start_url": "/",
+  "splash_pages": null
+}
