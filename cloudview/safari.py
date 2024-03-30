@@ -50,7 +50,11 @@ def __get_safari_tabs(config: dict, force: bool = False):
 
 def __render(config: dict) -> Optional[dict]:
     return util.tpl_include(
-        "browser", {"browser": config["name"], "devices": __get_safari_tabs(config)}
+        "browser",
+        {
+            "browser": config["name"],
+            "devices": __get_safari_tabs(config, not config.get("cache-enabled", True)),
+        },
     )
 
 

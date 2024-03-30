@@ -22,11 +22,11 @@ class DataSource:
             return self.render_fn(self.config)
 
     def start(self):
-        if self.enabled:
+        if self.enabled and self.config.get("cache-enabled", True):
             self.update_fn(self.config)
             self.timer = threading.Timer(self.update_period, self.start)
             self.timer.start()
 
     def stop(self):
-        if self.timer:
+        if getattr(self, "timer", None):
             self.timer.cancel()

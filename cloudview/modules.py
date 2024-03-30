@@ -21,5 +21,4 @@ def init(config: dict):
     __sources.append(safari.init(section_conf.get("safari", {})))
     __sources.append(firefox.init(section_conf.get("firefox", {})))
     __sources.append(tot.init(section_conf.get("tot", {})))
-    for s in __sources:
-        s.start()
+    [s.start() for s in __sources]

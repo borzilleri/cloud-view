@@ -12,12 +12,14 @@ temperature = "F"
 
 [section.firefox]
 enabled = true
+cache-enabled = true
 name = "Firefox"
 cache-timeout = 20
 ffsclient = "ffsclient"
 
 [section.safari]
 enabled = true
+cache-enabled = true
 name = "Safari"
 cache-timeout = 20
 cloudtabs = "~/Library/Containers/com.apple.Safari/Data/Library/Safari/CloudTabs.db"
